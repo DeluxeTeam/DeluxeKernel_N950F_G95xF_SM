@@ -596,6 +596,13 @@ static void haptic_enable(struct timed_output_dev *tout_dev, int value)
 	}
 }
 
+#ifdef CONFIG_WAKE_GESTURES
+void vib_trigger(int value)
+{
+	haptic_enable(&g_drvdata->tout_dev, value);
+}
+#endif
+
 static enum hrtimer_restart haptic_timer_func(struct hrtimer *timer)
 {
 	struct max77865_haptic_drvdata *drvdata
@@ -700,7 +707,7 @@ static struct max77865_haptic_pdata *of_max77865_haptic_dt(struct device *dev)
 			pr_err("%s: failed to allocate duty data\n", __func__);
 			goto err_parsing_dt;
 		}
-		pdata->multi_freq_period 
+		pdata->multi_freq_period
 			= devm_kzalloc(dev, sizeof(u32)*pdata->multi_frequency, GFP_KERNEL);
 		if (!pdata->multi_freq_period) {
 			pr_err("%s: failed to allocate period data\n", __func__);
@@ -878,7 +885,7 @@ static int max77865_haptic_probe(struct platform_device *pdev)
 	drvdata->tout_dev.enable = haptic_enable;
 
 	g_drvdata = drvdata;
-	
+
 	drvdata->dev = sec_device_create(drvdata, "motor");
 	if (IS_ERR(drvdata->dev)) {
 		error = -ENODEV;
