@@ -423,12 +423,14 @@ out_rcu_unlock:
 }
 
 /* START_OF_KNOX_NPA */
+#ifdef CONFIG_KNOX_NCM
 /** The function is used to check if the ncm feature is enabled or not; if enabled then it calls knox_collect_socket_data function in ncm.c to record all the socket data; **/
 static void knox_collect_metadata(struct socket *sock) {
     if(check_ncm_flag()) {
     	knox_collect_socket_data(sock);
     }
 }
+#endif
 /* END_OF_KNOX_NPA */
 
 /*
@@ -461,7 +463,9 @@ int inet_release(struct socket *sock)
 		    !(current->flags & PF_EXITING))
 			timeout = sk->sk_lingertime;
         /* START_OF_KNOX_NPA */
+				#ifdef CONFIG_KNOX_NCM
         knox_collect_metadata(sock);
+				#endif
         /* END_OF_KNOX_NPA */
 		sock->sk = NULL;
 		sk->sk_prot->close(sk, timeout);
@@ -1955,4 +1959,3 @@ static int __init ipv4_proc_init(void)
 #endif /* CONFIG_PROC_FS */
 
 MODULE_ALIAS_NETPROTO(PF_INET);
-
