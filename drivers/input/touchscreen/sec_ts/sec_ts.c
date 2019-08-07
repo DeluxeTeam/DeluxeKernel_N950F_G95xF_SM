@@ -10,7 +10,7 @@
  * published by the Free Software Foundation.
  */
 
-#ifdef CONFIG_WAKE_GESTURES
+#ifdef CONFIG_WAKE_GESTURES_DREAM
 #include <linux/kernel.h>
 #include <linux/wake_gestures.h>
 static bool is_suspended;
@@ -1289,7 +1289,7 @@ static void sec_ts_read_event(struct sec_ts_data *ts)
 						input_report_key(ts->input_dev, BTN_TOUCH, 1);
 						input_report_key(ts->input_dev, BTN_TOOL_FINGER, 1);
 
-#ifdef CONFIG_WAKE_GESTURES
+#ifdef CONFIG_WAKE_GESTURES_DREAM
 						if (is_suspended)
 							ts->coord[t_id].x += 5000;
 #endif
@@ -2734,7 +2734,7 @@ static int sec_ts_input_open(struct input_dev *dev)
 {
 	struct sec_ts_data *ts = input_get_drvdata(dev);
 	int ret;
-#ifdef CONFIG_WAKE_GESTURES
+#ifdef CONFIG_WAKE_GESTURES_DREAM
 	is_suspended = false;
 #endif
 	ts->input_closed = false;
@@ -2763,7 +2763,7 @@ static int sec_ts_input_open(struct input_dev *dev)
 #ifdef USE_RESET_EXIT_LPM
 		schedule_delayed_work(&ts->reset_work, msecs_to_jiffies(TOUCH_RESET_DWORK_TIME));
 #else
-#ifdef CONFIG_WAKE_GESTURES
+#ifdef CONFIG_WAKE_GESTURES_DREAM
 		if (s2w_switch || dt2w_switch)
 			disable_irq_wake(ts->client->irq);
 		else
@@ -2788,7 +2788,7 @@ static int sec_ts_input_open(struct input_dev *dev)
 static void sec_ts_input_close(struct input_dev *dev)
 {
 	struct sec_ts_data *ts = input_get_drvdata(dev);
-#ifdef CONFIG_WAKE_GESTURES
+#ifdef CONFIG_WAKE_GESTURES_DREAM
 	is_suspended = true;
 #endif
 	ts->input_closed = true;
@@ -2827,7 +2827,7 @@ static void sec_ts_input_close(struct input_dev *dev)
 
 	ts->pressure_setting_mode = 0;
 
-#ifdef CONFIG_WAKE_GESTURES
+#ifdef CONFIG_WAKE_GESTURES_DREAM
 	if (s2w_switch || dt2w_switch)
 		enable_irq_wake(ts->client->irq);
 	else
@@ -3083,7 +3083,7 @@ out:
 	if (ts->lowpower_mode)
 		reinit_completion(&ts->resume_done);
 
-#ifdef CONFIG_WAKE_GESTURES
+#ifdef CONFIG_WAKE_GESTURES_DREAM
 	if (dt2w_switch_changed) {
 		dt2w_switch = dt2w_switch_temp;
 		dt2w_switch_changed = false;

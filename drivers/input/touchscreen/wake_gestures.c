@@ -41,7 +41,11 @@
 #define S2S_DEFAULT		0
 #define WG_PWRKEY_DUR           60
 
-/* Samsung GS9 */
+#define DT2W_FEATHER		150
+#define DT2W_TIME 		500
+
+/* GREAT */
+#ifdef CONFIG_WAKE_GESTURES_GREAT
 #define SWEEP_Y_MAX             4080
 #define SWEEP_X_MAX             4095
 #define SWEEP_EDGE		200
@@ -53,8 +57,20 @@
 #define SWEEP_X_FINAL           1500
 #define SWEEP_Y_START		2000
 #define SWEEP_Y_NEXT            200
-#define DT2W_FEATHER		150
-#define DT2W_TIME 		500
+#else
+/* DREAM2/DREAM */
+#define SWEEP_Y_MAX             2960
+#define SWEEP_X_MAX             1440
+#define SWEEP_EDGE		130
+#define SWEEP_Y_LIMIT           SWEEP_Y_MAX-SWEEP_EDGE
+#define SWEEP_X_LIMIT           SWEEP_X_MAX-SWEEP_EDGE
+#define SWEEP_X_B1              480
+#define SWEEP_X_B2              940
+#define SWEEP_X_START		720
+#define SWEEP_X_FINAL           360
+#define SWEEP_Y_START		1066
+#define SWEEP_Y_NEXT            300
+#endif
 
 /* Wake Gestures */
 #define SWEEP_TIMEOUT		300

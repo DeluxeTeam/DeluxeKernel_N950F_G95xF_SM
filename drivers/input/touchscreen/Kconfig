@@ -1144,4 +1144,13 @@ source "drivers/input/touchscreen/sec_ts_y661/Kconfig"
 config WAKE_GESTURES
 	bool "wake gestures"
 
+config WAKE_GESTURES_GREAT
+	bool "wake gestures for greatlte"
+
+config WAKE_GESTURES_DREAM2
+	bool "wake gestures for dream2lte"
+
+config WAKE_GESTURES_DREAM
+	bool "wake gestures for dreamlte"
+
 endif
