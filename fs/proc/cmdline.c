@@ -4,11 +4,11 @@
 #include <linux/seq_file.h>
 #include <asm/setup.h>
 
-static char updated_command_line[COMMAND_LINE_SIZE];
+static char new_command_line[COMMAND_LINE_SIZE];
 
 static int cmdline_proc_show(struct seq_file *m, void *v)
 {
-	seq_printf(m, "%s\n", updated_command_line);
+	seq_printf(m, "%s\n", new_command_line);
 	return 0;
 }
 
@@ -24,34 +24,39 @@ static const struct file_operations cmdline_proc_fops = {
 	.release	= single_release,
 };
 
-static void proc_cmdline_set(char *name, char *value)
+static void patch_flag(char *cmd, const char *flag, const char *val)
 {
-	char flag_str[COMMAND_LINE_SIZE];
-	char *flag_substr, *flag_space_substr, *cmd = flag_str;
+	size_t flag_len, val_len;
+	char *start, *end;
 
-	strcpy(cmd, name);
+	start = strstr(cmd, flag);
+	if (!start)
+		return;
 
-	flag_substr = strstr(updated_command_line, cmd);
-	if (flag_substr) {
-		flag_space_substr = strchr(flag_substr, ' ');
-		if (!flag_space_substr)
-			flag_space_substr = "";
+	flag_len = strlen(flag);
+	val_len = strlen(val);
+	end = start + flag_len + strcspn(start + flag_len, " ");
+	memmove(start + flag_len + val_len, end, strlen(end) + 1);
+	memcpy(start + flag_len, val, val_len);
+}
 
-		scnprintf(updated_command_line, COMMAND_LINE_SIZE, "%.*s%s",
-			  (int)(flag_substr - updated_command_line + 1),
-			  updated_command_line, flag_space_substr);
-	}
-
-	scnprintf(updated_command_line, COMMAND_LINE_SIZE, "%s %s=%s", updated_command_line, name, value);
+static void patch_safetynet_flags(char *cmd)
+{
+	patch_flag(cmd, "androidboot.fmp_config=", "1");
+	patch_flag(cmd, "androidboot.verifiedbootstate=", "green");
+	patch_flag(cmd, "androidboot.veritymode=", "enforcing");
+	patch_flag(cmd, "androidboot.warranty_bit=", "0");
 }
 
 static int __init proc_cmdline_init(void)
 {
-	strcpy(updated_command_line, saved_command_line);
+	strcpy(new_command_line, saved_command_line);
 
-	proc_cmdline_set("androidboot.verifiedbootstate", "green");
-	proc_cmdline_set("androidboot.warranty_bit", "0");
-	proc_cmdline_set("androidboot.fmp_config", "1");
+	/*
+	 * Patch various flags from command line seen by userspace in order to
+	 * pass SafetyNet checks.
+	 */
+	patch_safetynet_flags(new_command_line);
 
 	proc_create("cmdline", 0, NULL, &cmdline_proc_fops);
 	return 0;
