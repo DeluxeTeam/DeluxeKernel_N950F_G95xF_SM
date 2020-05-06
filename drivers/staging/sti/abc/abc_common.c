@@ -360,7 +360,7 @@ static void sec_abc_work_func(struct work_struct *work)
 
 #if defined(DEBUG_ABC)
 	idx = 0;
-	while ((c = uevent_str[idx]) != '\0') {
+	while (*(c = uevent_str[idx]) != '\0') {
 		ABC_PRINT("%s\n", uevent_str[idx]);
 		idx++;
 	}

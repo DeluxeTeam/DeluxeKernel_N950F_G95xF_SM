@@ -4743,6 +4743,7 @@ static s32
 wl_role_to_cfg80211_type(uint16 role, uint16 *wl_iftype, uint16 *mode)
 {
 	switch (role) {
+	case WL_IF_TYPE_AWDL:
 		*wl_iftype = WL_IF_TYPE_AWDL;
 		*mode = WL_MODE_AWDL;
 		return NL80211_IFTYPE_STATION;

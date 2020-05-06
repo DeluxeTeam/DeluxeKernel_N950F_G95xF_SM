@@ -9920,9 +9920,8 @@ static int move_specific_task(struct lb_env *env, struct task_struct *pm)
 	struct task_struct *p, *n;
 
 	list_for_each_entry_safe(p, n, &env->src_rq->cfs_tasks, se.group_node) {
-	if (throttled_lb_pair(task_group(p), env->src_rq->cpu,
-				env->dst_cpu))
-		continue;
+		if (throttled_lb_pair(task_group(p), env->src_rq->cpu, env->dst_cpu))
+			continue;
 
 		if (!hmp_can_migrate_task(p, env))
 			continue;
@@ -11373,5 +11372,3 @@ static int __init hmp_tbsoftlanding_init(void)
 }
 late_initcall(hmp_tbsoftlanding_init);
 #endif	/* CONFIG_SCHED_HMP_TASK_BASED_SOFTLANDING */
-
-

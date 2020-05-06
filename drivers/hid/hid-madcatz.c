@@ -76,8 +76,8 @@ static int madcatz_universal_kbd_input_mapping(struct hid_device *hdev,
 	}
 
 	if (HID_UP_KEYBOARD == (usage->hid & HID_USAGE_PAGE)) {
-		switch (usage->hid & HID_USAGE) {
 		set_bit(EV_REP, hi->input->evbit);
+		switch (usage->hid & HID_USAGE) {
 		/* Only for UK keyboard */
 #ifdef CONFIG_HID_KK_UPGRADE
 		case 0x32: madcatz_gamepad_map_key_clear(KEY_KBDILLUMTOGGLE); break;
@@ -91,7 +91,7 @@ static int madcatz_universal_kbd_input_mapping(struct hid_device *hdev,
 		default:
 			return 0;
 		}
-	}	
+	}
 
 	if (HID_UP_CONSUMER == (usage->hid & HID_USAGE_PAGE)) {
 		switch (usage->hid & HID_USAGE) {
@@ -111,7 +111,7 @@ static int madcatz_universal_kbd_input_mapping(struct hid_device *hdev,
 		case 0x308: madcatz_gamepad_map_key_clear(KEY_LANGUAGE); break;
 		/* BRIGHTNESS DOWN */
 		case 0x30a: madcatz_gamepad_map_key_clear(KEY_BRIGHTNESSDOWN); break;
-		/* BRIGHTNESS UP */        
+		/* BRIGHTNESS UP */
 		case 0x30b: madcatz_gamepad_map_key_clear(KEY_BRIGHTNESSUP); break;
 		/* S-Finder */
 		case 0x304: madcatz_gamepad_map_key_clear(BTN_TRIGGER_HAPPY7); break;

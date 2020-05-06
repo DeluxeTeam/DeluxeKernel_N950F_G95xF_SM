@@ -235,9 +235,9 @@ uart_error_cnt_show(struct device *dev, struct device_attribute *attr, char *buf
 	struct s3c24xx_uart_port *ourport;
 	sprintf(buf, "000 000 000 000\n");//init buf : overrun parity frame break count
 
-	list_for_each_entry(ourport, &drvdata_list, node){ 
+	list_for_each_entry(ourport, &drvdata_list, node){
 	struct uart_port *port = &ourport->port;
-	
+
 	if (&ourport->pdev->dev != dev)
 		continue;
 
@@ -1694,8 +1694,8 @@ static ssize_t s3c24xx_serial_bt_log(struct file *file, char __user *userbuf, si
 
 		copied_bytes = 0;
 
-        if (port && port->state->pm_state == UART_PM_STATE_ON)
-    		s3c24xx_print_reg_status(ourport);
+		if (port && port->state->pm_state == UART_PM_STATE_ON)
+			s3c24xx_print_reg_status(ourport);
 		return 0;
 	}
 
