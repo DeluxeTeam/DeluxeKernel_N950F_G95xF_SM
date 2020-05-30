@@ -207,6 +207,7 @@
 		battery,sleep_mode_limit_current = <500>;
 		battery,wc_full_input_limit_current = <100>;
 		battery,wc_cv_current = <820>;
+		battery,wc_cv_tx_current = <650>;
 		battery,wc_cv_pack_current = <630>;
 		battery,wc_hero_stand_cc_cv = <70>;
 		battery,wc_hero_stand_cv_current = <600>;
@@ -321,6 +322,11 @@
 		fuelgauge,qrtable30 = <0x0D00>;
 		fuelgauge,fg_resistor = <2>;
 		fuelgauge,capacity = <0x0C45>;
+		fuelgauge,rcomp0 = <0x001A>;
+		fuelgauge,tempco = <0x0B10>;
+		fuelgauge,dPacc = <0x3200>;
+		fuelgauge,dQacc = <0x05CB>;
+		fuelgauge,fullcapnom = <0x172E>;
 		/*fuelgauge,auto_discharge_en;*/
 		fuelgauge,discharge_temp_threshold = <600>;
 		fuelgauge,discharge_volt_threshold = <4200>;
