@@ -408,7 +408,7 @@ LINUXINCLUDE    := \
 KBUILD_CPPFLAGS := -D__KERNEL__ -mcpu=cortex-a53 \
 				-mtune=cortex-a53 \
 				-O3 \
-				-fopenmp -D_GLIBCXX_PARALLEL
+				-D_GLIBCXX_PARALLEL
 
 KBUILD_CFLAGS   := -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
@@ -418,17 +418,17 @@ KBUILD_CFLAGS   := -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -mcpu=cortex-a53 \
        -mtune=cortex-a53 \
        -O3 \
-       -fopenmp -D_GLIBCXX_PARALLEL
+       -D_GLIBCXX_PARALLEL
 
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL := -mcpu=cortex-a53 \
 				       -mtune=cortex-a53 \
-				       -fopenmp -D_GLIBCXX_PARALLEL
+				       -D_GLIBCXX_PARALLEL
 KBUILD_AFLAGS   := -D__ASSEMBLY__ $(call cc-option,-fno-PIE)
 KBUILD_AFLAGS_MODULE  := -DMODULE
 KBUILD_CFLAGS_MODULE  := -DMODULE -mcpu=cortex-a53 \
        -mtune=cortex-a53 \
-       -fopenmp -D_GLIBCXX_PARALLEL
+       -D_GLIBCXX_PARALLEL
 KBUILD_LDFLAGS_MODULE := -T $(srctree)/scripts/module-common.lds
 
 # Read KERNELRELEASE from include/config/kernel.release (if it exists)
