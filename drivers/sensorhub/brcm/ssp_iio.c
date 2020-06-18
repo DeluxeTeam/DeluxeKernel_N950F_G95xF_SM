@@ -21,6 +21,8 @@
 #include <linux/iio/types.h>
 #include <linux/iio/kfifo_buf.h>
 
+extern void detect_prox(bool status);
+
 static struct sensor_info info_table[] = {
 	SENSOR_INFO_ACCELEROMETER,
 	SENSOR_INFO_GEOMAGNETIC,
@@ -301,6 +303,7 @@ void report_prox_data(struct ssp_data *data, struct sensor_value *proxdata)
         usleep_range(500, 1000);
 
 	report_iio_data(data, PROXIMITY_SENSOR, proxdata);
+	detect_prox(proxdata->prox_detect);
 	wake_lock_timeout(&data->ssp_wake_lock, 0.3*HZ);
 
         ts_high = (u32)((proxdata->timestamp)>>32);
