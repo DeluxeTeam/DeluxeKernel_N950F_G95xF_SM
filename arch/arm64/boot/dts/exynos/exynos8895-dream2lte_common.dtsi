@@ -10,7 +10,7 @@
 */
 
 #include "exynos8895-rmem.dtsi"
-#include "exynos8895.dtsi"
+#include "exynos8895-dreamxlte.dtsi"
 #include "exynos8895-display-lcd.dtsi"
 #include "modem-ss355ap-pdata.dtsi"
 #include "exynos8895-dream2lte-mmiotrace.dtsi"
@@ -1227,7 +1227,7 @@
 				0 2 2 0 /* IN1 */
 				2 2 0 0 /* IN2 */
 			>;
-			cirrus,out-mono = <0 0 0 1 0 0>;
+			cirrus,out-mono = <0 0 1 1 0 0>;
 			cirrus,auxpdm-falling-edge;
 
 			cirrus,gpio-defaults = <

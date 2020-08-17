@@ -10,7 +10,7 @@
 */
 
 #include "exynos8895-rmem.dtsi"
-#include "exynos8895.dtsi"
+#include "exynos8895-dreamxlte.dtsi"
 #include "exynos8895-display-lcd.dtsi"
 #include "modem-ss355ap-pdata.dtsi"
 
