@@ -1184,6 +1184,8 @@ on boot
 	chmod 0660 /sys/class/power_supply/battery/batt_capacity_max
 	chown system system /efs/Battery/batt_capacity_max
 	chmod 0660 /efs/Battery/batt_capacity_max
+	chown system system /sys/class/power_supply/battery/fg_asoc
+	chmod 0660 /sys/class/power_supply/battery/fg_asoc	
 	chown system system /efs/FactoryApp/batt_after_manufactured
 	chmod 0640 /efs/FactoryApp/batt_after_manufactured
 	chown system system /efs/FactoryApp/batt_discharge_level
