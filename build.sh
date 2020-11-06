@@ -49,6 +49,9 @@ echo "$1" | tr ',' '\n' | while read device; do
 	for file in deluxe/${device}/split_img/${device}lte.img-dt deluxe/${device}/split_img/${device}lte.img-zImage; do
 		sudo chmod 644 $file
 	done
+	for fl in data storage omr acct system lib lib/modules mnt config cache oem/secure_storage sys dev keydata proc keyrefuge; do
+		mkdir -p deluxe/${device}/ramdisk/${fl}
+	done
 	# Use proper permissions before compile boot.img
 	for perm in 0600 0640 0644 0750 0755 0771; do
 		cat deluxe/.perms/${perm}_perms | while read line; do
