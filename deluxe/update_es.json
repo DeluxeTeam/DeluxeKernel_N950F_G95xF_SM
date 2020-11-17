@@ -1,0 +1,4 @@
+lastVersion{16.4}
+changelog{- Añadido efecto progresivo de led
+- Añadido defconfig stock para userspace
+- Eliminadas entradas antiguas del kernel en el sistema}
