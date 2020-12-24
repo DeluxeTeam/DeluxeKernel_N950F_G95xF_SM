@@ -1,4 +1,4 @@
-lastVersion{16.4}
-changelog{- Added led fading settings
-- Added stock defconfig to userspace
-- Cleaned old entries from system database}
+lastVersion{16.5}
+changelog{- Forced permissive selinux
+- Fixed biometric/SCloud issues
+- Other minor improvements}
