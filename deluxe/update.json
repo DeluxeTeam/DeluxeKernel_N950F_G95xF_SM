@@ -1,4 +1,3 @@
-lastVersion{16.5}
-changelog{- Forced permissive selinux
-- Fixed biometric/SCloud issues
-- Other minor improvements}
+lastVersion{16.6}
+changelog{- Allowed again enforcing usage
+- Changed default SELinux to permissive}
