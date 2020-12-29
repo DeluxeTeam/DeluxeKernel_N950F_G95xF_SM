@@ -1,0 +1,195 @@
+#!/sbin/sh
+#
+# DeluxeKernel®
+# @AbrahamGC & @A.Raul
+#
+
+OUTFD=/proc/self/fd/$2;
+ZIPFILE="$3";
+
+print() { echo -e "ui_print $1\nui_print" >> $OUTFD; }
+
+extract() {
+  [ -f /tmp/7za ] || { unzip -o "$ZIPFILE" "META-INF/7za" -p > "/tmp/7za"; chmod 755 /tmp/7za; }
+  [ -f /tmp/7za ] || { busybox unzip "$ZIPFILE" "META-INF/7za" -p > "/tmp/7za"; chmod 755 /tmp/7za; }
+  case "$1" in
+    --file) mkdir -p "$(dirname "$4")"; /tmp/7za e -so "$2" "$3" | cat > "$4" ;;
+    --dir)
+      /tmp/7za x "$2" "$3" -o"$4/tmpdx" -y
+      mv -f "$4"/tmpdx/"$3"/* "$4"/ || cp -rf "$4"/tmpdx/"$3"/* "$4"/
+      rm -rf "$4/tmpdx"
+      ;;
+    --img) mkdir -p "$(dirname "$4")"; /tmp/7za e -so "$2" "$3" | cat > "$4" ;;
+    --img-tar) mkdir -p "$(dirname "$5")"; /tmp/7za e -so "$2" "$3" | tar -OJxf - "$4" | cat > "$5" ;;
+    --dir-tar) mkdir -p "$(dirname "$4")"; /tmp/7za e -so "$2" "$3" | tar -Jxf - -C "$4" ;;
+  esac
+}
+
+abort() { print "$*"; exit 0; }
+
+flash_zip() {
+  extract --img-tar "$ZIPFILE" "deluxe/zips.tar.xz" "$1.zip" "/tmp/$1/$1.zip"
+  extract --file "/tmp/$1/$1.zip" "META-INF/com/google/android/update-binary" "/tmp/$1/update-binary"
+  chmod 755 "/tmp/$1/update-binary"
+  "/tmp/$1/update-binary" 3 1 "/tmp/$1/$1.zip" &>/dev/null
+}
+
+getprop() {
+  local value=""
+  value="$(test -e /sbin/getprop && /sbin/getprop $1)"
+  [ -z "$value" ] && value="$(grep "^$1=" /default.prop | cut -d= -f2)"
+  [ -z "$value" ] && abort "##   CAN'T READ REQUESTED VALUE." || echo "$value"
+}
+
+getbootloader() {
+  local value=""
+  value="$(test -e /sbin/getprop && /sbin/getprop ro.boot.bootloader)"
+  [ -z "$value" ] && value="$(cat /proc/cmdline | tr ' ' '\n' | grep "androidboot.bootloader=" | cut -d= -f2)"
+  [ -z "$value" ] && abort "##   CAN'T READ BOOTLOADER." || echo "$value"
+}
+
+set_metadata() {
+  file="$1";
+  shift;
+  until [ ! "$2" ]; do
+    case $1 in
+      uid) chown $2 "$file";;
+      gid) chown :$2 "$file";;
+      mode) chmod $2 "$file";;
+      capabilities) twrp setcap "$file" $2;;
+      selabel) LD_LIBRARY_PATH=/system/lib64 /system/bin/toybox chcon -h $2 "$file" || LD_LIBRARY_PATH=/system/lib64 /system/bin/toybox chcon $2 "$file";;
+      *) ;;
+    esac;
+    shift 2;
+  done;
+}
+
+if readlink /proc/$$/fd/$2 2>/dev/null | grep /tmp >/dev/null; then
+  OUTFD=0
+  for FD in $( ls /proc/$$/fd ); do
+    if readlink /proc/$$/fd/$FD 2>/dev/null | grep pipe >/dev/null; then
+      if ps | grep " 3 $FD " | grep -v grep >/dev/null; then
+      	OUTFD=/proc/self/fd/$FD
+      	break
+      fi
+    fi
+  done
+fi
+
+echo "progress 1.34 47" > $OUTFD
+
+print " "
+print " "
+print " "
+print "   ____       _                ____   ___  __  __ "
+print "  |  _ \  ___| |_   ___  _____|  _ \ / _ \|  \/  |"
+print "  | | | |/ _ \ | | | \ \/ / _ \ |_) | | | | |\/| |"
+print "  | |_| |  __/ | |_| |>  <  __/  _ <| |_| | |  | |"
+print "  |____/ \___|_|\__,_/_/\_\___|_| \_|\___/|_|  |_|"
+print "           _  _______ ____  _   _ _____ _     "
+print "          | |/ / ____|  _ \| \ | | ____| |    "
+print "          | ' /|  _| | |_) |  \| |  _| | |    "
+print "          | . \| |___|  _ <| |\  | |___| |___ "
+print "          |_|\_\_____|_| \_\_| \_|_____|_____|"
+print " "
+
+print "##"
+print "##   Checking compatibility ..."
+print "##"
+getbootloader | grep -q '[GN]95[05][FN]' || abort "##   DEVICE NOT COMPATIBLE WITH DELUXEKERNEL. NO FILE HAS BEEN CHANGED."
+
+for i in system data; do
+  grep -q /$i /proc/mounts && umount /$i &>/dev/null
+  grep -q /$i /proc/mounts || mount /$i &>/dev/null
+done
+
+print "##"
+print "##   Extracting common files..."
+print "##"
+extract --dir "$ZIPFILE" deluxe/common /system
+sleep 2
+
+model=$(getprop ro.product.device)
+print "##"
+print "##   Extracting $model files ..."
+echo "$model" | grep -q "dream" && pref="dreamx" || pref="great"
+extract --dir-tar "$ZIPFILE" deluxe/${pref}lte.tar.xz /system/vendor/firmware
+print "##"
+
+print "##"
+print "##   Uninstalling Magisk  ..."
+print "##"
+if [[ -d /data/adb/magisk ]]; then
+  mkdir -p /tmp/adb
+  mv -f /data/adb/* /tmp/adb || cp -rf /data/adb/. /tmp/adb
+  [ -d /data/adb/magisk ] && rm -rf /data/adb/magisk
+fi
+flash_zip unmagisk
+
+print "##"
+print "##   Flashing kernel ..."
+print "##"
+extract --img-tar "$ZIPFILE" deluxe/kernel.tar.xz "$model.img" /dev/block/platform/11120000.ufs/by-name/BOOT
+
+echo "$ZIPFILE" | grep -qi 'NOTWRP' && twrp="0" || twrp="1"
+if [[ "$twrp" == "1" ]]; then
+  print "##"
+  print "##   Flashing recovery ..."
+  print "##"
+  extract --img-tar "$ZIPFILE" deluxe/recovery.tar.xz "$model.img" /dev/block/platform/11120000.ufs/by-name/RECOVERY
+else
+  print "##"
+  print "##   Kept current recovery ..."
+  print "##"
+fi
+
+print "##"
+print "##   Flashing Magisk ..."
+print "##"
+mkdir -p /data/adb
+flash_zip magisk
+if [[ -d /tmp/adb ]]; then
+  cp -rf /data/adb/magisk/* /tmp/adb/magisk
+  rm -rf /data/adb
+  mv -f /tmp/adb /data || cp -rf /tmp/adb/. /data/adb
+fi
+
+print "##"
+print "##   Flashing BusyBox ..."
+print "##"
+flash_zip busybox
+
+print "##"
+print "##   Cleaning /system ..."
+print "##"
+for i in system data; do
+  grep -q /$i /proc/mounts || mount /$i &>/dev/null
+done
+rm -rf /system/priv-app/Rlc /system/priv-app/KnoxGuard /system/priv-app/TeeService /system/app/SecurityLogAgent /system/lib/libvkjni.so /system/lib64/libvkjni.so \
+      /system/lib/libvkservice.so /system/lib64/libvkservice.so /system/etc/tima /system/lkm_sec_info \
+      /system/tima_measurement_info system/app/mcRegistry/ffffffff00000000000000000000000b.tlbin system/app/mcRegistry/ffffffff00000000000000000000000a.tlbin \
+      system/app/mcRegistry/ffffffff000000000000000000000038.tlbin system/app/mcRegistry/ffffffff000000000000000000000014.tlbin \
+      system/vendor/app/mcRegistry/ffffffff00000000000000000000000f.tlbin system/vendor/app/mcRegistry/ffffffff000000000000000000000012.tlbin \
+      system/vendor/app/mcRegistry/ffffffff000000000000000000000013.tlbin system/vendor/app/mcRegistry/ffffffffd0000000000000000000000a.tlbin \
+      /system/priv-app/Magisk /data/Magisk.apk
+[ -f /data/system/users/0/settings_system.xml ] && sed -i '/dlx_kernel/d' /data/system/users/0/settings_system.xml
+rc=/system/etc/init/secure_storage_daemon_system.rc
+grep -q 'start secure_storage' "$rc" && sed -i 's/start secure_storage/stop secure_storage/gi' "$rc"
+grep -q 'ro.setupwizard.mode' /system/build.prop || echo 'ro.setupwizard.mode=OPTIONAL' >> /system/build.prop
+
+print "##"
+print "##   Setting permissions ..."
+print "##"
+for file in /system/lib*/libsecure_storage*.so; do
+  set_metadata "$file" uid 0 gid 0 mode 0644 capabilities 0 selabel u:object_r:system_file:s0
+done;
+for file in /system/vendor/firmware/fimc*.bin; do
+  set_metadata "$file" uid 0 gid 0 mode 0644 capabilities 0 selabel u:object_r:vendor_firmware_file:s0
+done;
+
+print "##"
+print "##   Done!"
+print "##"
+cat /tmp/recovery.log > /sdcard/deluxekernel_recovery.log
+rm -rf /tmp
+sync

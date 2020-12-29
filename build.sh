@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # @abrahamgcc
-# ./build.sh great,dream2,dream ++DeluxeKernel_v15.2++
+# ./build.sh great,dream2,dream ++DeluxeKernel_v15.2++ N950F_G95xF_DeluxeKernel_REL.zip
 
 KERNEL_NAME="${2}"
+ZIP_NAME="${3}"
 YELLOW="\e[93m"
 GREEN="\e[92m"
 RED="\e[91m"
@@ -72,3 +73,20 @@ echo "$1" | tr ',' '\n' | while read device; do
 		deluxe/${device}/split_img/${device}lte.img-dt deluxe/${device}/split_img/${device}lte.img-zImage
 	echo -e " BUILT ${KERNEL_NAME}_${device}lte.img in $(time_check). ${NONE}"
 done
+[[ -z "${ZIP_NAME}" || $(ls deluxe/*.img | wc -l) != "3" ]] && abort "MISSING ZIP NAME OR KERNELS NOT FOUND [ALL VARIANTS ARE NEEDED FOR MAKE THE ZIP]"
+cd deluxe
+for i in great dream2 dream; do
+	mv *${i}lte.img ${i}lte.img
+done
+echo -e " COMPRESSING kernels... ${NONE}"
+tar -cJf kernel.tar.xz greatlte.img dream2lte.img dreamlte.img
+mv kernel.tar.xz zip/deluxe/kernel.tar.xz
+cd zip
+zip -r -9 "${ZIP_NAME}".zip META-INF deluxe
+rm -rf ../"${ZIP_NAME}".zip
+mv "${ZIP_NAME}".zip ../"${ZIP_NAME}".zip
+rm -rf deluxe/kernel.tar.xz
+cd ../../
+rm -rf deluxe/*.img
+clear
+echo -e " BUILT ${ZIP_NAME}.zip. ${NONE}"
