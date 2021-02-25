@@ -1,4 +1,4 @@
-lastVersion{16.7}
-changelog{- Añadido MoroSound v2.1.0
-- Actualizado ramdisk/fimc DTL1 para greatlte
-- Actualizado TWRP v3.5.0}
+lastVersion{16.8}
+changelog{- Actualizados ramdisks S8+/S8 [DUA3]
+- Actualizados binarios de camara [DTL1/DUA3]
+- Actualizado Magisk v22}
