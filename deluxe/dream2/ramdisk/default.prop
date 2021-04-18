@@ -48,9 +48,9 @@ log.tag.stats_log=I
 #
 # BOOTIMAGE_BUILD_PROPERTIES
 #
-ro.bootimage.build.date=Thu Jan 7 15:31:01 KST 2021
-ro.bootimage.build.date.utc=1610001061
-ro.bootimage.build.fingerprint=samsung/dream2ltexx/dream2lte:9/PPR1.180610.011/G955FXXSBDUA3:user/test-keys
+ro.bootimage.build.date=Tue Apr 6 19:12:08 KST 2021
+ro.bootimage.build.date.utc=1617703928
+ro.bootimage.build.fingerprint=samsung/dream2ltexx/dream2lte:9/PPR1.180610.011/G955FXXUCDUD1:user/test-keys
 #
 # DELUXEROM_PROPERTIES
 #
