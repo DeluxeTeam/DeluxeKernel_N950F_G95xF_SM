@@ -1,4 +1,5 @@
-lastVersion{16.8}
-changelog{- Actualizados ramdisks S8+/S8 [DUA3]
-- Actualizados binarios de camara [DTL1/DUA3]
-- Actualizado Magisk v22}
+lastVersion{16.9}
+changelog{- Actualizados ramdisks N8/S8+/S8 [DUD1]
+- Actualizados binarios de camara [DUD1]
+- Actualizado Magisk v22 [Instalar apk de Magisk manualmente]
+- Actualizado BusyBox}
