@@ -1,5 +1,6 @@
-lastVersion{16.9}
-changelog{- Updated N8/S8+/S8 ramdisks [DUD1]
-- Updated camera binaries [DUD1]
-- Updated Magisk v22 [Install Magisk apk manually]
-- Updated BusyBox}
+lastVersion{17}
+changelog{- Merged DUG6/DUG7 sources
+- Updated N8 ramdisk [DUG6]
+- Updated camera binaries [DUG6]
+- Updated Magisk v23 [Install Magisk APK manually]
+- Updated BusyBox }
