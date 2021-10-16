@@ -48,9 +48,9 @@ log.tag.stats_log=I
 #
 # BOOTIMAGE_BUILD_PROPERTIES
 #
-ro.bootimage.build.date=Mon May 17 16:18:13 KST 2021
-ro.bootimage.build.date.utc=1621235893
-ro.bootimage.build.fingerprint=samsung/greatltexx/greatlte:9/PPR1.180610.011/N950FXXUFDUE4:user/test-keys
+ro.bootimage.build.date=Thu Jul 15 19:05:52 KST 2021
+ro.bootimage.build.date.utc=1626343552
+ro.bootimage.build.fingerprint=samsung/greatltexx/greatlte:9/PPR1.180610.011/N950FXXSGDUG6:user/test-keys
 #
 # DELUXEROM_PROPERTIES
 #
