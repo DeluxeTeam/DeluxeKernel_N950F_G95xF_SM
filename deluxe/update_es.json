@@ -1,6 +1,3 @@
-lastVersion{17}
-changelog{- Actualizados sources DUG6/DUG7
-- Actualizado ramdisk N8 [DUG6]
-- Actualizados binarios de camara [DUG6]
-- Actualizado Magisk v23 [Instalar apk de Magisk manualmente]
-- Actualizado BusyBox }
+lastVersion{17.1}
+changelog{- Arreglados archivos incorrectos para greatlte
+}
